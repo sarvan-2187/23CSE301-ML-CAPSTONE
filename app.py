@@ -2,6 +2,7 @@ import os
 os.environ["USE_TF"] = "0"; os.environ["TRANSFORMERS_NO_TF"] = "1"
 
 import joblib
+import json
 import pandas as pd
 import streamlit as st
 
@@ -55,37 +56,111 @@ def load_c():
     return model, AutoTokenizer.from_pretrained(f"{ART}/tokenizer")
 
 
-st.title("🎣 Phishing Email Detector")
-choice = st.radio(
-    "Model",
-    ["A. TF-IDF + LogReg (fast, explains words)", "C. Fine-tuned BERT (98.6% acc)"],
+XAI = "xai_outputs"
+st.markdown(
+    """<style>
+    .hero{padding:1.4rem 1.6rem;border-radius:16px;margin-bottom:1rem;color:#fff;
+      background:linear-gradient(120deg,#0f2027,#203a43 45%,#2c5364)}
+    .hero h1{margin:0;font-size:2rem}.hero p{margin:.3rem 0 0;opacity:.8}
+    [data-testid=stMetric]{background:rgba(120,140,160,.12);padding:.8rem 1rem;border-radius:12px}
+    </style>
+    <div class="hero"><h1>🎣 Phishing Email Detector</h1>
+    <p>BERT + CNN + GRU with multi-head attention vs. a TF-IDF baseline, with explainability</p></div>""",
+    unsafe_allow_html=True,
 )
-text = st.text_area("Paste an email body", height=220)
 
-if st.button("Analyze", type="primary") and text.strip():
-    if choice.startswith("A"):
-        tfidf, clf = load_a()
-        X = tfidf.transform([text])
-        p = clf.predict_proba(X)[0, 1]
-    else:
-        import torch
-        with st.spinner("Loading BERT model (first run only)..."):
-            model, tok = load_c()
-        enc = tok(text, truncation=True, padding="max_length", max_length=CFG["max_len"], return_tensors="pt")
-        with torch.no_grad():
-            p = torch.sigmoid(model(enc["input_ids"], enc["attention_mask"]))[0].item()
-    (st.error if p >= 0.5 else st.success)(
-        f"{'PHISHING' if p >= 0.5 else 'SAFE'}: phishing probability {p:.1%}"
+
+@st.cache_data
+def results():
+    r = pd.read_csv(f"{ART}/results_all_models.csv")
+    r["short"] = r["model"].str.split(".").str[0].str.replace(" (reported)", "", regex=False)
+    return r
+
+
+R = results()
+tab_det, tab_met, tab_gr, tab_xai = st.tabs(["🔍 Detector", "📊 Metrics", "📈 Graphs", "🧠 Explainability"])
+
+with tab_det:
+    choice = st.radio(
+        "Model",
+        ["A. TF-IDF + LogReg (fast, explains words)", "C. Fine-tuned BERT (98.6% acc)"],
+        horizontal=True,
     )
-    if choice.startswith("A"):
-        contrib = X.multiply(clf.coef_[0]).tocoo()
-        words = tfidf.get_feature_names_out()
-        df = pd.DataFrame({"word": [words[j] for j in contrib.col], "contribution": contrib.data})
-        st.subheader("Why? (right = phishing, left = safe)")
-        top = pd.concat([df.nlargest(8, "contribution"), df.nsmallest(8, "contribution")])
-        st.bar_chart(top.set_index("word"))
-    else:
-        st.caption("Only the first 128 tokens are scored. Word-level explanation is available with Model A.")
+    text = st.text_area("Paste an email body", height=200)
+    if st.button("Analyze", type="primary") and text.strip():
+        if choice.startswith("A"):
+            tfidf, clf = load_a()
+            X = tfidf.transform([text])
+            p = clf.predict_proba(X)[0, 1]
+        else:
+            import torch
+            with st.spinner("Loading BERT model (first run only)..."):
+                model, tok = load_c()
+            enc = tok(text, truncation=True, padding="max_length", max_length=CFG["max_len"], return_tensors="pt")
+            with torch.no_grad():
+                p = torch.sigmoid(model(enc["input_ids"], enc["attention_mask"]))[0].item()
+        (st.error if p >= 0.5 else st.success)(f"{'PHISHING' if p >= 0.5 else 'SAFE'}")
+        st.progress(float(p), text=f"phishing probability {p:.1%}")
+        if choice.startswith("A"):
+            contrib = X.multiply(clf.coef_[0]).tocoo()
+            words = tfidf.get_feature_names_out()
+            df = pd.DataFrame({"word": [words[j] for j in contrib.col], "contribution": contrib.data})
+            st.subheader("Why? (positive = phishing, negative = safe)")
+            top = pd.concat([df.nlargest(8, "contribution"), df.nsmallest(8, "contribution")])
+            st.bar_chart(top.set_index("word"), horizontal=True)
+        else:
+            st.caption("Only the first 128 tokens are scored. Word-level explanation is available with Model A.")
 
-with st.expander("Model comparison"):
-    st.dataframe(pd.read_csv(f"{ART}/results_all_models.csv").iloc[:, :6])
+with tab_met:
+    best = R.iloc[1:].sort_values("f1", ascending=False).iloc[0]
+    paper = R.iloc[0]
+    st.subheader(f"Best model: {best['model']}")
+    c = st.columns(4)
+    for col, m in zip(c, ["accuracy", "precision", "recall", "f1"]):
+        col.metric(m.upper(), f"{best[m]:.2%}", f"{(best[m] - paper[m]) * 100:+.1f} pts vs paper")
+    st.metric("ROC-AUC", f"{best['roc_auc']:.4f}")
+    st.dataframe(
+        R.drop(columns="short").set_index("model").style.format(
+            {k: "{:.2%}" for k in ["accuracy", "precision", "recall", "f1"]} | {"roc_auc": "{:.4f}"}
+        ).background_gradient(subset=["accuracy", "f1"], cmap="Greens"),
+        width="stretch",
+    )
+    st.subheader("Significance tests (McNemar)")
+    st.dataframe(pd.read_csv(f"{ART}/significance_tests.csv"), hide_index=True, width="stretch")
+
+with tab_gr:
+    st.subheader("Metric comparison")
+    st.bar_chart(R.set_index("short")[["accuracy", "precision", "recall", "f1"]])
+    st.subheader("Confusion matrices")
+    cm = pd.read_csv(f"{ART}/confusion_matrices.csv", index_col=0)
+    cm.loc["error rate"] = (cm.loc["FP"] + cm.loc["FN"]) / cm.sum()
+    st.dataframe(cm.style.format("{:.0f}", subset=pd.IndexSlice[["TN", "FP", "FN", "TP"], :])
+                 .format("{:.2%}", subset=pd.IndexSlice[["error rate"], :]).background_gradient(cmap="Blues", axis=1),
+                 width="stretch")
+    st.subheader("Training curves")
+    H = json.load(open(f"{ART}/training_histories.json"))
+    names = {"hist_b": "B paper-literal", "hist_abl": "B-ablation MLP", "hist_c": "C corrected", "hist_mgo": "D MGO-tuned"}
+    pick = st.segmented_control("Metric", ["val_loss", "val_acc", "train_loss"], default="val_loss")
+    curves = pd.DataFrame({names[k]: pd.Series(v[pick or "val_loss"]) for k, v in H.items()})
+    curves.index = curves.index + 1
+    st.line_chart(curves, x_label="epoch")
+    st.subheader("MGO vs random search (hyperparameter tuning)")
+    st.dataframe(pd.read_csv(f"{ART}/mgo_vs_random_summary.csv"), hide_index=True, width="stretch")
+    for f in ["curves_overlay", "mgo_vs_random", "confusion_all"]:
+        st.image(f"{ART}/plots/{f}.png", width="stretch")
+
+with tab_xai:
+    st.subheader("Strongest words overall (Model A)")
+    g = pd.read_csv(f"{XAI}/global_A_top_words.csv")
+    a, b = st.columns(2)
+    a.caption("Pushes toward SAFE"); a.bar_chart(g.set_index("safe_word")["safe_weight"], horizontal=True, color="#4C72B0")
+    b.caption("Pushes toward PHISHING"); b.bar_chart(g.set_index("phish_word")["phish_weight"], horizontal=True, color="#C44E52")
+    st.info("Top safe words like 'enron' are dataset-source artefacts, not real safety signals. See the shortcut test below.")
+    st.subheader("Deletion test: do highlighted words matter?")
+    d = pd.read_csv(f"{XAI}/deletion_test.csv").groupby("model")[["drop_top5", "drop_random5"]].mean()
+    st.bar_chart(d)
+    st.subheader("Shortcut-word removal")
+    st.dataframe(pd.read_csv(f"{XAI}/shortcut_removal_test.csv").style.format(
+        {"accuracy": "{:.2%}", "f1": "{:.3f}", "acc_on_emails_with_shortcuts": "{:.2%}"}),
+        hide_index=True, width="stretch")
+    st.image(f"{XAI}/shortcut_curve.png", width="stretch")

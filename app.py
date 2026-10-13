@@ -58,14 +58,14 @@ def load_c():
 
 XAI = "xai_outputs"
 st.markdown(
-    """<style>
-    .hero{padding:1.4rem 1.6rem;border-radius:16px;margin-bottom:1rem;color:#fff;
-      background:linear-gradient(120deg,#0f2027,#203a43 45%,#2c5364)}
-    .hero h1{margin:0;font-size:2rem}.hero p{margin:.3rem 0 0;opacity:.8}
-    [data-testid=stMetric]{background:rgba(120,140,160,.12);padding:.8rem 1rem;border-radius:12px}
-    </style>
-    <div class="hero"><h1>Phishing Email Detector</h1>
-    <p>BERT + CNN + GRU with multi-head attention vs. a TF-IDF baseline, with explainability</p></div>""",
+    "<style>"
+    ".hero{padding:1.4rem 1.6rem;border-radius:16px;margin-bottom:1rem;color:#fff;"
+    "background:linear-gradient(120deg,#0f2027,#203a43 45%,#2c5364)}"
+    ".hero h1{margin:0;font-size:2rem}.hero p{margin:.3rem 0 0;opacity:.8}"
+    "[data-testid=stMetric]{background:rgba(120,140,160,.12);padding:.8rem 1rem;border-radius:12px}"
+    "</style>"
+    '<div class="hero"><h1>Phishing Email Detector</h1>'
+    "<p>BERT + CNN + GRU with multi-head attention vs. a TF-IDF baseline, with explainability</p></div>",
     unsafe_allow_html=True,
 )
 

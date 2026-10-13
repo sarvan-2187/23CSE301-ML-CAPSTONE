@@ -1,0 +1,93 @@
+{
+  "summary": {
+    "columns": [
+      "Unnamed: 0",
+      "Email Text",
+      "Email Type"
+    ],
+    "raw_rows": 18650,
+    "null_text": 16,
+    "null_label": 0,
+    "empty_or_placeholder": 536,
+    "empty_breakdown": {
+      "empty": 533,
+      "<blank>": 3
+    },
+    "after_empty_removal": 18098,
+    "exact_duplicate_rows_removed": 563,
+    "emails_involved_in_duplicates": 1036,
+    "duplicate_texts_with_conflicting_labels": 0,
+    "duplicates_by_class": {
+      "phishing": 418,
+      "safe": 145
+    },
+    "final_rows": 17535,
+    "final_class_counts": {
+      "safe": 10979,
+      "phishing": 6556
+    },
+    "final_phishing_pct": 37.39,
+    "split_sizes": {
+      "train": 12273,
+      "val": 2631,
+      "test": 2631
+    },
+    "words_median": 167,
+    "words_p90": 746,
+    "pct_over_128_words": 59.4,
+    "near_dup_within_dataset": {
+      ">=0.8": 4138,
+      ">=0.9": 2659,
+      ">=0.95": 1708
+    },
+    "test_emails_near_dup_of_train": {
+      ">=0.8": 521,
+      ">=0.9": 323,
+      ">=0.95": 201
+    }
+  },
+  "source_patterns": [
+    {
+      "pattern": "Enron (enron, ect, hou, kaminski, vince)",
+      "phishing_emails": 27,
+      "safe_emails": 2629,
+      "pct_of_phishing": 0.4,
+      "pct_of_safe": 23.9
+    },
+    {
+      "pattern": "Linguistics list (linguist*, syntax, semantics)",
+      "phishing_emails": 10,
+      "safe_emails": 1661,
+      "pct_of_phishing": 0.2,
+      "pct_of_safe": 15.1
+    },
+    {
+      "pattern": "Linux / SpamAssassin lists (redhat, freshrpms, spamassassin, exmh)",
+      "phishing_emails": 172,
+      "safe_emails": 1412,
+      "pct_of_phishing": 2.6,
+      "pct_of_safe": 12.9
+    },
+    {
+      "pattern": "Reply / forward markers (wrote:, original message, forwarded by)",
+      "phishing_emails": 48,
+      "safe_emails": 2762,
+      "pct_of_phishing": 0.7,
+      "pct_of_safe": 25.2
+    },
+    {
+      "pattern": "Starts with 'Subject:'",
+      "phishing_emails": 2,
+      "safe_emails": 1,
+      "pct_of_phishing": 0.0,
+      "pct_of_safe": 0.0
+    },
+    {
+      "pattern": "Contains a URL (http / www)",
+      "phishing_emails": 750,
+      "safe_emails": 3328,
+      "pct_of_phishing": 11.4,
+      "pct_of_safe": 30.3
+    }
+  ]
+}

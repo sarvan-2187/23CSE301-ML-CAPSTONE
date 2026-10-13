@@ -1,0 +1,5 @@
+model_1,model_2,n01,n10,p_value,question
+D,B-ablation,53,39,0.1749838984629618,tuned literal stack vs plain MLP -> is the stack inert?
+B,B-ablation,63,305,3.350182685923724e-39,default literal stack vs plain MLP
+C,A,35,28,0.44996253629022254,corrected model vs TF-IDF floor
+C,D,93,17,7.237227129476198e-14,sequence-preserving + fine-tuned vs tuned literal

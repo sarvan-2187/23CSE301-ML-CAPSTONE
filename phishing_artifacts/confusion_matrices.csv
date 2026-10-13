@@ -1,0 +1,5 @@
+,A. TF-IDF + LogisticRegression,B. Paper-literal (frozen BERT pooled),B-ablation. Plain MLP (no attn/CNN/GRU),C. Corrected BCG-MHeadAttention (fine-tuned),D. Paper-literal + MGO-tuned head
+TN,1634,1535,1589,1635,1614
+FP,13,112,58,12,33
+FN,32,258,70,26,81
+TP,952,726,914,958,903

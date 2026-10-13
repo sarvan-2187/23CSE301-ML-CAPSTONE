@@ -1,0 +1,43 @@
+{
+  "cfg": {
+    "bert_name": "bert-base-uncased",
+    "max_len": 128,
+    "batch_size": 32,
+    "n_heads": 8,
+    "cnn_filters": 128,
+    "cnn_kernel": 5,
+    "gru_units": 64,
+    "dropout": 0.3,
+    "head_lr": 0.001,
+    "bert_lr": 2e-05,
+    "epochs_frozen": 10,
+    "epochs_ft": 3,
+    "test_size": 0.15,
+    "val_size": 0.15
+  },
+  "versions": {
+    "python": "3.13.15",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.18.0",
+    "tokenizers": "0.23.2",
+    "scikit-learn": "1.6.1",
+    "pandas": "2.2.3"
+  },
+  "mgo_best_hp": {
+    "gru_units": 256,
+    "dropout": 0.16576186748945815,
+    "lr": 0.00013801946767569965
+  },
+  "untrained_val_loss": {
+    "PaperLiteralModel": [
+      0.687550961971283,
+      0.6805503368377686,
+      0.6971988677978516
+    ],
+    "PlainMLP": [
+      0.6852690577507019,
+      0.6991874575614929,
+      0.6916507482528687
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+pattern,phishing_emails,safe_emails,pct_of_phishing,pct_of_safe
+"Enron (enron, ect, hou, kaminski, vince)",27,2629,0.4,23.9
+"Linguistics list (linguist*, syntax, semantics)",10,1661,0.2,15.1
+"Linux / SpamAssassin lists (redhat, freshrpms, spamassassin, exmh)",172,1412,2.6,12.9
+"Reply / forward markers (wrote:, original message, forwarded by)",48,2762,0.7,25.2
+Starts with 'Subject:',2,1,0.0,0.0
+Contains a URL (http / www),750,3328,11.4,30.3

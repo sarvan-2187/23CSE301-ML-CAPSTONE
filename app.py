@@ -8,7 +8,7 @@ import streamlit as st
 
 ART = "phishing_artifacts"
 CFG = {"max_len": 128, "n_heads": 8, "cnn_filters": 128, "cnn_kernel": 5, "gru_units": 64, "dropout": 0.3}
-st.set_page_config(page_title="Phishing Email Detector", page_icon="🎣")
+st.set_page_config(page_title="Phishing Email Detector", page_icon=None)
 
 
 @st.cache_resource
@@ -64,7 +64,7 @@ st.markdown(
     .hero h1{margin:0;font-size:2rem}.hero p{margin:.3rem 0 0;opacity:.8}
     [data-testid=stMetric]{background:rgba(120,140,160,.12);padding:.8rem 1rem;border-radius:12px}
     </style>
-    <div class="hero"><h1>🎣 Phishing Email Detector</h1>
+    <div class="hero"><h1>Phishing Email Detector</h1>
     <p>BERT + CNN + GRU with multi-head attention vs. a TF-IDF baseline, with explainability</p></div>""",
     unsafe_allow_html=True,
 )
@@ -78,7 +78,7 @@ def results():
 
 
 R = results()
-tab_det, tab_met, tab_gr, tab_xai = st.tabs(["🔍 Detector", "📊 Metrics", "📈 Graphs", "🧠 Explainability"])
+tab_det, tab_met, tab_gr, tab_xai = st.tabs(["Detector", "Metrics", "Graphs", "Explainability"])
 
 with tab_det:
     choice = st.radio(

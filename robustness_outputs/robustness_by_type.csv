@@ -1,0 +1,15 @@
+column,value,emails,phishing_share_%,A_false_alarm_%,B_false_alarm_%,B-Ablation_false_alarm_%,D_false_alarm_%,C_false_alarm_%,A_caught_%,B_caught_%,B-Ablation_caught_%,D_caught_%,C_caught_%
+phishing_type,legitimate,3956,0.0,1.1,4.1,0.0,0.0,0.0,,,,,
+phishing_type,credential_harvesting,1000,100.0,,,,,,60.7,86.5,30.9,43.8,96.1
+phishing_type,urgency,1000,100.0,,,,,,100.0,26.7,56.6,35.2,100.0
+phishing_type,financial_scam,500,100.0,,,,,,96.6,92.2,90.4,92.6,99.8
+phishing_type,authority_scam,500,100.0,,,,,,92.8,28.8,28.4,19.0,91.8
+phishing_type,romance_dating,500,100.0,,,,,,31.4,31.4,1.6,0.0,11.6
+phishing_type,generic_phishing,500,100.0,,,,,,100.0,89.2,42.4,44.2,95.0
+phishing_type,threats,500,100.0,,,,,,96.2,56.2,73.2,70.8,100.0
+phishing_type,tech_support,500,100.0,,,,,,3.2,62.0,4.8,3.4,73.4
+phishing_type,social_engineering_advanced,500,100.0,,,,,,98.8,63.6,16.0,15.4,44.8
+phishing_type,social_engineering,500,100.0,,,,,,82.6,38.8,54.8,54.2,99.8
+severity,high,4488,100.0,,,,,,73.0,56.6,37.5,36.7,84.0
+severity,low,4201,5.8,1.1,4.1,0.0,0.0,0.0,100.0,90.2,42.9,44.9,94.7
+severity,medium,1267,100.0,,,,,,86.2,53.7,51.1,41.9,82.1

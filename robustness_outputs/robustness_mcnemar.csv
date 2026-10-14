@@ -1,0 +1,5 @@
+compare,only_C_right,only_other_right,p_value
+C vs A. TF-IDF + Logistic Regression,948,478,4.7696522125072426e-36
+C vs B. Paper-Literal Model,2163,403,5.890354076689592e-290
+C vs B-Ablation: Plain MLP,2682,73,0.0
+C vs D. Paper-Literal + MGO Head,2799,45,0.0

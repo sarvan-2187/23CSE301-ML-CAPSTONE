@@ -1,0 +1,27 @@
+{
+  "new_dataset_file": "phishing_legit_dataset_KD_10000.csv",
+  "text_col": "text",
+  "label_col": "label",
+  "overlap": {
+    "new_after_cleaning": 9956,
+    "exact_overlap": 0,
+    "near_overlap": 0,
+    "kept": 9956
+  },
+  "length_shift": [
+    {
+      "dataset": "Original test",
+      "emails": 2631,
+      "median_words": 161,
+      "mean_words": 350,
+      "cut_at_128_tokens_%": 71.1
+    },
+    {
+      "dataset": "New dataset",
+      "emails": 9956,
+      "median_words": 35,
+      "mean_words": 37,
+      "cut_at_128_tokens_%": 0.0
+    }
+  ]
+}

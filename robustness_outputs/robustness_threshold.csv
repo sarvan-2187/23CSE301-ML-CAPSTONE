@@ -1,0 +1,6 @@
+model,new_threshold,acc_at_0.5,acc_new_threshold,f1_at_0.5,f1_new_threshold,roc_auc
+A. TF-IDF + Logistic Regression,0.33,85.74,90.8,86.7,92.65,97.89
+B. Paper-Literal Model,0.01,72.73,60.26,71.66,75.21,76.65
+B-Ablation: Plain MLP,0.05,64.03,88.44,57.46,89.87,94.74
+D. Paper-Literal + MGO Head,0.03,62.59,91.19,54.98,92.39,96.43
+"C. Corrected, Fine-Tuned Model",0.01,90.26,93.48,91.21,94.28,99.92
